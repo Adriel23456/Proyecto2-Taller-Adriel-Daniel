@@ -1,5 +1,6 @@
 git init
 git add .
+git status -s
 git config --global user.email "adriel.chaves@hotmail.com"
 git config --global user.name "Adriel23456"
 git commit -m "Texto que identifica la parte del codigo que se quiere guardar en el que momento"
