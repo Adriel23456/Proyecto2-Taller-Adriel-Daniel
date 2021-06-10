@@ -11,6 +11,10 @@ import pygame.locals as pl
 
 pygame.font.init()
 
+carpeta_juego = os.path.dirname(__file__)
+carpeta_assets = os.path.join(carpeta_juego, "Assets")
+carpeta_font = os.path.join(carpeta_assets, "Font")
+font = os.path.join(carpeta_font, 'ARCADECLASSIC.TTF')
 
 class TextInput:
     """
@@ -21,7 +25,7 @@ class TextInput:
     def __init__(
             self,
             initial_string="Nombre",
-            font_family="Proyecto Final\Assets\Font\ARCADECLASSIC.TTF",
+            font_family=font,
             font_size=35,
             antialias=True,
             text_color=(225, 225, 225),
