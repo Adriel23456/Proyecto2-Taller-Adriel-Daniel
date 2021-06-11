@@ -316,13 +316,38 @@ class pantallas():
                     self.new_highscore = False
         ventana.blit(background, (0, 0))
         draw_text(ventana, "High   Scores", 60, 300, 50)
-        with open(r"Proyecto Final/high_scores.txt", "r") as high_scores:
+        with open("high_scores.txt", "r") as high_scores:
             lista = high_scores.readlines()
+        #Aqui se define la aplicacion de la funcion que va a acomodar las puntuaciones
+            def scores(Points, player_name, num, lista):
+                if num == 9:
+                    if Points > int(lista[num]):
+                        lista[num-1] = "{}\n".format(player_name)
+                        lista[num] = "{}\n".format(Points)
+                        return lista
+                    else:
+                        return lista
+                else:
+                    if Points > int(lista[num]):
+                        nombre_anterior = lista[num-1]
+                        nombre_anterior = nombre_anterior.rstrip()
+                        score_anterior = int(lista[num])
+                        lista[num-1] = "{}\n".format(player_name)
+                        lista[num] = "{}\n".format(Points)
+                        return scores(score_anterior, nombre_anterior, num+2, lista)
+                    else:
+                        return scores(Points, player_name, num+2, lista)
+            scores(1000, "PRUEBA", 1, lista)
+        #Esta es la funcion para escribir en el archivo el nuevo score
+        with open("high_scores1.txt", "w") as high_scores:
+            high_scores.writelines(lista)
             draw_text(ventana, "1         {}   {}".format(lista[0].rstrip(), lista[1].rstrip()), 60, 300, 150)
             draw_text(ventana, "2         {}   {}".format(lista[2].rstrip(), lista[3].rstrip()), 60, 300, 200)
             draw_text(ventana, "3         {}   {}".format(lista[4].rstrip(), lista[5].rstrip()), 60, 300, 250)
             draw_text(ventana, "4         {}   {}".format(lista[6].rstrip(), lista[7].rstrip()), 60, 300, 300)
             draw_text(ventana, "5         {}   {}".format(lista[8].rstrip(), lista[9].rstrip()), 60, 300, 350)
+            draw_text(ventana, "6         {}   {}".format(lista[10].rstrip(), lista[11].rstrip()), 60, 300, 400)
+            draw_text(ventana, "7         {}   {}".format(lista[12].rstrip(), lista[13].rstrip()), 60, 300, 450)
         
         if self.new_highscore == True:
             draw_text(ventana, "New   High   Score!", 60, 300, 550)
