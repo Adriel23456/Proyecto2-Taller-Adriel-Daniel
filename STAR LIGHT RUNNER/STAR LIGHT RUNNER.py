@@ -298,10 +298,9 @@ class pantallas():
         draw_text(ventana, "2021", 20, 300, 400)
         draw_text(ventana, "GR   3", 20, 300, 450)
         draw_text(ventana, "Profesor   Leonardo   Araya   Martinez", 20, 300, 500)
-        draw_text(ventana, "Daniel   Cob   Beirute", 20, 300, 550)
+        draw_text(ventana, "Daniel   Cob   Beirute Y Adriel Chaves Salazar", 20, 300, 550)
         draw_text(ventana, "Pygame   text   input         Silas Gyger", 20, 300, 600)
-        draw_text(ventana, "Usa   las   teclas   WASD   para   moverte", 20, 300, 650)
-        draw_text(ventana, "La   tecla   de   espacio   para   disparar", 20, 300, 670)
+        draw_text(ventana, "Usa   las   teclas   UP  DOWN  LEFT  RIGHT   para   moverte", 20, 300, 650)
         draw_text(ventana, "Presiona   la   tecla   de   ESC   en   cualquier   momento", 20, 300, 700)
         draw_text(ventana, "para   volver   al   menu   principal", 20, 300, 720)
 
