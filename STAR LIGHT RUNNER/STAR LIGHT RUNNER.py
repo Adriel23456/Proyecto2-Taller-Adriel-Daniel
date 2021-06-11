@@ -46,6 +46,9 @@ button_img7 = pygame.transform.scale(button_img7, (108, 69))
 
 # Definir sonidos
 PLAYING_GAMEPLAY_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Pantalla-de-Juego.mp3'))
+MENU_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Menu-Principal.mp3'))
+CREDITS_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Creditos.mp3'))
+SCORES_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Puntuacion.mp3'))
 HIT_SOUND = pygame.mixer.Sound(os.path.join(carpeta_sonidos, 'Hit.wav'))
 CLICK_SOUND = pygame.mixer.Sound(os.path.join(carpeta_sonidos, 'Click.wav'))
 
@@ -90,6 +93,11 @@ def scores(Points, player_name, num, lista):
             return scores(score_anterior, nombre_anterior, num+2, lista)
         else:
             return scores(Points, player_name, num+2, lista)
+
+def Cambio_Musica():
+    MENU_MUSIC.stop()
+    PLAYING_GAMEPLAY_MUSIC.play(-1)
+    PLAYING_GAMEPLAY_MUSIC.set_volume(0.2)
 
 class jugador(pygame.sprite.Sprite):
     def __init__(self):
@@ -195,6 +203,7 @@ class pantallas():
                 for x in range(4):
                     meteoritos = enemigos()
                     Enemigos.add(meteoritos)
+            Cambio_Musica()
             self.Pantalla_1()
         elif self.pantalla == "Pantalla_2":
             if self.nueva_pantalla:
@@ -414,8 +423,8 @@ all_sprites = pygame.sprite.Group(jugador)
 Enemigos = pygame.sprite.Group()
 
 
-PLAYING_GAMEPLAY_MUSIC.play(-1)
-PLAYING_GAMEPLAY_MUSIC.set_volume(0.2)
+MENU_MUSIC.play(-1)
+MENU_MUSIC.set_volume(0.2)
 
 while pantallas.running:
     pantallas.cambio_pantalla()
