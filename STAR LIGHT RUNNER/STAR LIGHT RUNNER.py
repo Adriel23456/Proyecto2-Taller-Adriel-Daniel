@@ -71,6 +71,26 @@ def colisiones():
         jugador.vida -= 1
         #puntuacion -= 1
 
+#Aqui se define la aplicacion de la funcion que va a acomodar las puntuaciones
+def scores(Points, player_name, num, lista):
+    if num == 13:
+        if Points > int(lista[num]):
+            lista[num-1] = "{}\n".format(player_name)
+            lista[num] = "{}\n".format(Points)
+            return lista
+        else:
+            return lista
+    else:
+        if Points > int(lista[num]):
+            nombre_anterior = lista[num-1]
+            nombre_anterior = nombre_anterior.rstrip()
+            score_anterior = int(lista[num])
+            lista[num-1] = "{}\n".format(player_name)
+            lista[num] = "{}\n".format(Points)
+            return scores(score_anterior, nombre_anterior, num+2, lista)
+        else:
+            return scores(Points, player_name, num+2, lista)
+
 class jugador(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -318,28 +338,10 @@ class pantallas():
         draw_text(ventana, "High   Scores", 60, 300, 50)
         with open("high_scores.txt", "r") as high_scores:
             lista = high_scores.readlines()
-        #Aqui se define la aplicacion de la funcion que va a acomodar las puntuaciones
-            def scores(Points, player_name, num, lista):
-                if num == 9:
-                    if Points > int(lista[num]):
-                        lista[num-1] = "{}\n".format(player_name)
-                        lista[num] = "{}\n".format(Points)
-                        return lista
-                    else:
-                        return lista
-                else:
-                    if Points > int(lista[num]):
-                        nombre_anterior = lista[num-1]
-                        nombre_anterior = nombre_anterior.rstrip()
-                        score_anterior = int(lista[num])
-                        lista[num-1] = "{}\n".format(player_name)
-                        lista[num] = "{}\n".format(Points)
-                        return scores(score_anterior, nombre_anterior, num+2, lista)
-                    else:
-                        return scores(Points, player_name, num+2, lista)
+            #APLICA ESTA FUNCION DE FORMA INFINITA COSA QUE ME GENERA CANCER MENTAL
             scores(1000, "PRUEBA", 1, lista)
         #Esta es la funcion para escribir en el archivo el nuevo score
-        with open("high_scores1.txt", "w") as high_scores:
+        with open("high_scores.txt", "w") as high_scores:
             high_scores.writelines(lista)
             draw_text(ventana, "1         {}   {}".format(lista[0].rstrip(), lista[1].rstrip()), 60, 300, 150)
             draw_text(ventana, "2         {}   {}".format(lista[2].rstrip(), lista[3].rstrip()), 60, 300, 200)
