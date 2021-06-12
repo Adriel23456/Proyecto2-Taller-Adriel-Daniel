@@ -75,7 +75,7 @@ def colisiones():
         #puntuacion -= 1
 
 #Aqui se define la aplicacion de la funcion que va a acomodar las puntuaciones
-def scores(Points, player_name, num, lista):
+def score_update(Points, player_name, num, lista):
     if num == 13:
         if Points > int(lista[num]):
             lista[num-1] = "{}\n".format(player_name)
@@ -95,9 +95,20 @@ def scores(Points, player_name, num, lista):
             return scores(Points, player_name, num+2, lista)
 
 def Cambio_Musica():
-    MENU_MUSIC.stop()
-    PLAYING_GAMEPLAY_MUSIC.play(-1)
-    PLAYING_GAMEPLAY_MUSIC.set_volume(0.2)
+    if pantallas.pantalla == "Pantalla_de_inicio":
+        PLAYING_GAMEPLAY_MUSIC.stop()
+        MENU_MUSIC.stop()
+        PLAYING_GAMEPLAY_MUSIC.play(-1)
+        PLAYING_GAMEPLAY_MUSIC.set_volume(0.2)
+
+def read_write_txt():
+    with open(r"STAR LIGHT RUNNER/high_scores.txt", "r") as high_scores:
+        lista = high_scores.readlines()
+        score_update(pantallas.score, pantallas.nombre_jugador, 1, lista)
+
+    with open(r"STAR LIGHT RUNNER/high_scores.txt", "w") as high_scores:
+        high_scores.writelines(lista)
+        
 
 class jugador(pygame.sprite.Sprite):
     def __init__(self):
@@ -203,7 +214,6 @@ class pantallas():
                 for x in range(4):
                     meteoritos = enemigos()
                     Enemigos.add(meteoritos)
-            Cambio_Musica()
             self.Pantalla_1()
         elif self.pantalla == "Pantalla_2":
             if self.nueva_pantalla:
@@ -345,13 +355,9 @@ class pantallas():
                     self.new_highscore = False
         ventana.blit(background, (0, 0))
         draw_text(ventana, "High   Scores", 60, 300, 50)
-        with open("high_scores.txt", "r") as high_scores:
+        
+        with open(r"STAR LIGHT RUNNER/high_scores.txt", "r") as high_scores:
             lista = high_scores.readlines()
-            #APLICA ESTA FUNCION DE FORMA INFINITA COSA QUE ME GENERA CANCER MENTAL
-            scores(1000, "PRUEBA", 1, lista)
-        #Esta es la funcion para escribir en el archivo el nuevo score
-        with open("high_scores.txt", "w") as high_scores:
-            high_scores.writelines(lista)
             draw_text(ventana, "1         {}   {}".format(lista[0].rstrip(), lista[1].rstrip()), 60, 300, 150)
             draw_text(ventana, "2         {}   {}".format(lista[2].rstrip(), lista[3].rstrip()), 60, 300, 200)
             draw_text(ventana, "3         {}   {}".format(lista[4].rstrip(), lista[5].rstrip()), 60, 300, 250)
