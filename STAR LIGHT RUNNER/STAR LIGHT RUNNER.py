@@ -7,10 +7,12 @@ pygame.init()
 pygame.mixer.init()
 clock = pygame.time.Clock()
 
+
 # Configuración de la ventana
 W, H = 600, 800
 ventana = pygame.display.set_mode((W, H))
 pygame.display.set_caption("STAR LIGHT RUNNER")
+
 
 #Rutas para los archivos
 carpeta_juego = os.path.dirname(__file__)
@@ -21,6 +23,7 @@ carpeta_musica = os.path.join(carpeta_assets, "Musica")
 carpeta_personajes = os.path.join(carpeta_assets, "Personajes")
 carpeta_sonidos = os.path.join(carpeta_assets, "Sonidos")
 carpeta_font = os.path.join(carpeta_assets, "Font")
+
 
 # Definir imágenes
 background = pygame.image.load(os.path.join(carpeta_fondos, 'Background.png'))
@@ -43,6 +46,7 @@ button_img6 = pygame.transform.scale(button_img6, (108, 69))
 
 button_img7 = pygame.image.load(os.path.join(carpeta_botones, 'Boton7.png'))
 button_img7 = pygame.transform.scale(button_img7, (108, 69))
+
 
 # Definir sonidos
 PLAYING_GAMEPLAY_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Pantalla-de-Juego.mp3'))
