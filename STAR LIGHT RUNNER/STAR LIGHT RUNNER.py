@@ -439,7 +439,7 @@ class pantallas():
                         self.pantalla = "Pantalla_de_inicio"
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
-        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 10:
+        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
             pantallas.pantalla = "Pantalla_2"
             pantallas.nueva_pantalla = True
             jugador.rect.center = (300, 700)
