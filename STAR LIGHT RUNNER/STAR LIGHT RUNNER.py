@@ -94,9 +94,9 @@ def score_update(Points, player_name, num, lista):
             score_anterior = int(lista[num])
             lista[num-1] = "{}\n".format(player_name)
             lista[num] = "{}\n".format(Points)
-            return scores(score_anterior, nombre_anterior, num+2, lista)
+            return score_update(score_anterior, nombre_anterior, num+2, lista)
         else:
-            return scores(Points, player_name, num+2, lista)
+            return score_update(Points, player_name, num+2, lista)
 
 def Cambio_Musica():
     if pantallas.pantalla == "Pantalla_de_inicio":
