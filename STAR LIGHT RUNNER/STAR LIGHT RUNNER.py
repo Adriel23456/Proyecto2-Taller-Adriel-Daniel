@@ -27,8 +27,10 @@ carpeta_font = os.path.join(carpeta_assets, "Font")
 
 # Definir imágenes
 background = pygame.image.load(os.path.join(carpeta_fondos, 'Background.png'))
+
 button_img1 = pygame.image.load(os.path.join(carpeta_botones, 'Boton1.png'))
 button_img1 = pygame.transform.scale(button_img1, (600, 113))
+
 button_img2 = pygame.image.load(os.path.join(carpeta_botones, 'Boton2.png'))
 button_img2 = pygame.transform.scale(button_img2, (192, 69))
 
@@ -54,6 +56,8 @@ MENU_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Menu-Principal.mp3
 CREDITS_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Creditos.mp3'))
 SCORES_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Puntuacion.mp3'))
 HIT_SOUND = pygame.mixer.Sound(os.path.join(carpeta_sonidos, 'Hit.wav'))
+EXPLOSION1_SOUND = pygame.mixer.Sound(os.path.join(carpeta_sonidos, 'Explosion1.wav'))
+EXPLOSION2_SOUND = pygame.mixer.Sound(os.path.join(carpeta_sonidos, 'Explosion2.wav'))
 CLICK_SOUND = pygame.mixer.Sound(os.path.join(carpeta_sonidos, 'Click.wav'))
 
 def draw_text(surface, text, size, x, y):
@@ -70,8 +74,32 @@ def update_background():
         ventana.blit(background,(0,y_relativa))
     pantallas.y = pantallas.y + 20
 
+def pantalla_de_juego():
+    # Fondo
+    update_background()
+    # Banner
+    ventana.blit(button_img1, (0, 0))
+    # Iconos
+    ventana.blit(pygame.transform.scale(pygame.image.load(os.path.join(carpeta_personajes,'Jugador.png')), (30, 30)), (470, 55))
+    # Vida Jugador
+    draw_text(ventana,"x{}".format(str(jugador.vida)), 25, 530, 58)
+    # Nombre del Jugador
+    draw_text(ventana, pantallas.nombre_jugador, 25, 512, 35)
+    # Tiempo
+    tiempo = (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000
+    draw_text(ventana, "Tiempo", 25, 90, 35)
+    draw_text(ventana, str(tiempo), 30, 90, 55)
+    # Puntaje
+    if pantallas.pantalla == "Pantalla_1":
+        pantallas.score = tiempo
+    elif pantallas.pantalla == "Pantalla_2":
+        pantallas.score = tiempo*3
+    elif pantallas.pantalla == "Pantalla_3":
+        pantallas.score = tiempo*5
+    draw_text(ventana, str(pantallas.score), 50, 300, 30)
+
 def colisiones():
-    colision = pygame.sprite.spritecollide(jugador,Enemigos, True)
+    colision = pygame.sprite.spritecollide(jugador, Enemigos, True)
     if colision:
         HIT_SOUND.play()
         HIT_SOUND.set_volume(0.2)
@@ -112,7 +140,23 @@ def read_write_txt():
 
     with open(r"STAR LIGHT RUNNER/high_scores.txt", "w") as high_scores:
         high_scores.writelines(lista)
-        
+
+def new_highscore():
+    with open(r"STAR LIGHT RUNNER/high_scores.txt", "r") as high_scores:
+        lista = high_scores.readlines()
+
+        if pantallas.score > int(lista[1]):
+            return True
+        elif pantallas.score > int(lista[3]):
+            return True
+        elif pantallas.score > int(lista[5]):
+            return True
+        elif pantallas.score > int(lista[7]):
+            return True
+        elif pantallas.score > int(lista[9]):
+            return True
+        else:
+            return False
 
 class jugador(pygame.sprite.Sprite):
     def __init__(self):
@@ -149,7 +193,13 @@ class jugador(pygame.sprite.Sprite):
             self.rect.y = 730
         # Verificación de la vida del jugador
         if self.vida <= 0:
-            pantallas.pantalla = "Pantalla_de_inicio"
+            EXPLOSION1_SOUND.play()
+            if new_highscore():
+                pantallas.pantalla = "high_scores"
+                pantallas.new_highscore = True
+            else:
+                pantallas.pantalla = "Pantalla_de_inicio"
+            read_write_txt()
             pantallas.nueva_pantalla = True
             self.rect.center = (300, 700)
             self.vida = 3
@@ -176,15 +226,19 @@ class enemigos(pygame.sprite.Sprite):
         self.rect.y += self.velocidad_y
         # Limites de movimiento en la ventana
         if self.rect.x <= 0:
+            EXPLOSION2_SOUND.play()
             self.velocidad_x = random.randrange(1,4)
             self.velocidad_y = random.randrange(-4,4)
         elif self.rect.x >= 510:
+            EXPLOSION2_SOUND.play()
             self.velocidad_x = random.randrange(-4,-1)
             self.velocidad_y = random.randrange(-4,4)
         if self.rect.y <= 0:
+            EXPLOSION2_SOUND.play()
             self.velocidad_x = random.randrange(-4,4)
             self.velocidad_y = random.randrange(1,4)
         elif self.rect.y >= 710:
+            EXPLOSION2_SOUND.play()
             self.velocidad_x = random.randrange(-4,4)
             self.velocidad_y = random.randrange(-4,-1)
 
@@ -381,11 +435,19 @@ class pantallas():
                 elif event.type == pygame.KEYDOWN:
                     # Regreso al menú principal
                     if event.key == pygame.K_ESCAPE:
+                        Enemigos.empty()
                         self.pantalla = "Pantalla_de_inicio"
+                        jugador.vida = 3
                         pantallas.nueva_pantalla = True
+        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 10:
+            pantallas.pantalla = "Pantalla_2"
+            pantallas.nueva_pantalla = True
+            jugador.rect.center = (300, 700)
+            jugador.vida = 3
+            Enemigos.empty()
         all_sprites.update()
         Enemigos.update()
-        update_background()
+        pantalla_de_juego()
         colisiones()
         all_sprites.draw(ventana)
         Enemigos.draw(ventana)
@@ -398,11 +460,19 @@ class pantallas():
                 elif event.type == pygame.KEYDOWN:
                     # Regreso al menú principal
                     if event.key == pygame.K_ESCAPE:
+                        Enemigos.empty()
                         self.pantalla = "Pantalla_de_inicio"
+                        jugador.vida = 3
                         pantallas.nueva_pantalla = True
+        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
+            pantallas.pantalla = "Pantalla_3"
+            pantallas.nueva_pantalla = True
+            jugador.rect.center = (300, 700)
+            jugador.vida = 3
+            Enemigos.empty()
         all_sprites.update()
         Enemigos.update()
-        update_background()
+        pantalla_de_juego()
         colisiones()
         all_sprites.draw(ventana)
         Enemigos.draw(ventana)
@@ -415,11 +485,23 @@ class pantallas():
                 elif event.type == pygame.KEYDOWN:
                     # Regreso al menú principal
                     if event.key == pygame.K_ESCAPE:
+                        Enemigos.empty()
                         self.pantalla = "Pantalla_de_inicio"
+                        jugador.vida = 3
                         pantallas.nueva_pantalla = True
+        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
+            if new_highscore():
+                pantallas.pantalla = "high_scores"
+                pantallas.new_highscore = True
+            else:
+                pantallas.pantalla = "Pantalla_de_inicio"
+            pantallas.nueva_pantalla = True
+            jugador.rect.center = (300, 700)
+            jugador.vida = 3
+            Enemigos.empty()
         all_sprites.update()
         Enemigos.update()
-        update_background()
+        pantalla_de_juego()
         colisiones()
         all_sprites.draw(ventana)
         Enemigos.draw(ventana)
@@ -431,7 +513,6 @@ jugador = jugador()
 all_sprites = pygame.sprite.Group(jugador)
 
 Enemigos = pygame.sprite.Group()
-
 
 MENU_MUSIC.play(-1)
 MENU_MUSIC.set_volume(0.2)
