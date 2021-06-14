@@ -52,6 +52,8 @@ button_img7 = pygame.transform.scale(button_img7, (108, 69))
 
 # Definir sonidos
 PLAYING_GAMEPLAY_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Pantalla-de-Juego.mp3'))
+PLAYING_GAMEPLAY_MUSIC2 = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Pantalla-de-Juego2.mp3'))
+PLAYING_GAMEPLAY_MUSIC3 = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Pantalla-de-Juego3.mp3'))
 MENU_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Menu-Principal.mp3'))
 CREDITS_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Creditos.mp3'))
 SCORES_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Puntuacion.mp3'))
