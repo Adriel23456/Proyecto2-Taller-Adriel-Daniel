@@ -106,25 +106,59 @@ def colisiones():
         jugador.vida -= 1
         #puntuacion -= 1
 
-#Aqui se define la aplicacion de la funcion que va a acomodar las puntuaciones
-def score_update(Points, player_name, num, lista):
-    if num == 13:
-        if Points > int(lista[num]):
-            lista[num-1] = "{}\n".format(player_name)
-            lista[num] = "{}\n".format(Points)
-            return lista
-        else:
-            return lista
+#Aqui se define la aplicacion de quicksort
+def quicksort(lista):
+    if len(lista) == 0:
+        return lista
     else:
-        if Points > int(lista[num]):
-            nombre_anterior = lista[num-1]
-            nombre_anterior = nombre_anterior.rstrip()
-            score_anterior = int(lista[num])
-            lista[num-1] = "{}\n".format(player_name)
-            lista[num] = "{}\n".format(Points)
-            return score_update(score_anterior, nombre_anterior, num+2, lista)
-        else:
-            return score_update(Points, player_name, num+2, lista)
+        pivote = lista[len(lista)//2]
+        listaMenor = []
+        listaMedio = []
+        listaMayor = []
+        for x in lista:
+            if x<pivote:
+                listaMenor.append(x)
+            elif x==pivote:
+                listaMedio.append(x)
+            else:
+                listaMayor.append(x)
+        return quicksort(listaMayor) + listaMedio + quicksort(listaMenor)
+
+#Aqui se define la aplicacion de la funcion que va a acomodar las puntuaciones
+def scores_quicksort(Points, player_name, lista):
+    #Añadir a la lista ya existente los nuevos valores de nombre de jugador y sus puntos al final, remplazando los que antes estaban colocados
+    lista[14] = "{}\n".format(player_name)
+    lista[15] = "{}\n".format(Points)
+    #Dejar esta lista intacta y luego crear una nueva lista pero que sea de solamente los valores numericos, antes representados:
+    num1 = int(lista[1].rstrip("\n"))
+    num2 = lista[3].rstrip("\n")
+    num3 = lista[5].rstrip("\n")
+    num4 = lista[7].rstrip("\n")
+    num5 = lista[9].rstrip("\n")
+    num6 = lista[11].rstrip("\n")
+    num7 = lista[13].rstrip("\n")
+    num8 = lista[15].rstrip("\n")
+    Nueva_lista = [int(num1) , int(num2) , int(num3) , int(num4) , int(num5) , int(num6) , int(num7) , int(num8)]
+    #Aplicar quicksort en esta nueva lista, y despues sacar esa nueva lista como quicksort_lista:
+    quicksort_lista = quicksort(Nueva_lista)
+    #Crear la lista final a mostrar con el orden correcto de los nombres y puntuaciones creados con el codigo de quicksort
+    if quicksort_lista[0] != Nueva_lista[0]:
+        Lista_Final = [lista[14]  ,  lista[15]  , lista[0] , lista[1] , lista[2] , lista[3] , lista[4] , lista[5] , lista[6] , lista[7] , lista[8] , lista[9] , lista[10] , lista[11] , lista[12] , lista[13] ]
+    elif quicksort_lista[1] != Nueva_lista[1]:
+        Lista_Final = [lista[0]  ,  lista[1]  , lista[14] , lista[15] , lista[2] , lista[3] , lista[4] , lista[5] , lista[6] , lista[7] , lista[8] , lista[9] , lista[10] , lista[11] , lista[12] , lista[13] ]
+    elif quicksort_lista[2] != Nueva_lista[2]:
+        Lista_Final = [lista[0]  ,  lista[1]  , lista[2] , lista[3] , lista[14] , lista[15] , lista[4] , lista[5] , lista[6] , lista[7] , lista[8] , lista[9] , lista[10] , lista[11] , lista[12] , lista[13] ]
+    elif quicksort_lista[3] != Nueva_lista[3]:
+        Lista_Final = [lista[0]  ,  lista[1]  , lista[2] , lista[3] , lista[4] , lista[5] , lista[14] , lista[15] , lista[6] , lista[7] , lista[8] , lista[9] , lista[10] , lista[11] , lista[12] , lista[13] ]
+    elif quicksort_lista[4] != Nueva_lista[4]:
+        Lista_Final = [lista[0]  ,  lista[1]  , lista[2] , lista[3] , lista[4] , lista[5] , lista[6] , lista[7] , lista[14] , lista[15] , lista[8] , lista[9] , lista[10] , lista[11] , lista[12] , lista[13] ]
+    elif quicksort_lista[5] != Nueva_lista[5]:
+        Lista_Final = [lista[0]  ,  lista[1]  , lista[2] , lista[3] , lista[4] , lista[5] , lista[6] , lista[7] , lista[8] , lista[9] , lista[14] , lista[15] , lista[10] , lista[11] , lista[12] , lista[13] ]
+    elif quicksort_lista[6] != Nueva_lista[6]:
+        Lista_Final = [lista[0]  ,  lista[1]  , lista[2] , lista[3] , lista[4] , lista[5] , lista[6] , lista[7] , lista[8] , lista[9] , lista[10] , lista[11] , lista[14] , lista[15] , lista[12] , lista[13] ]
+    else:
+        Lista_Final = lista
+    return Lista_Final
 
 def Cambio_Musica():
     if pantallas.pantalla == "Pantalla_de_inicio":
@@ -136,10 +170,10 @@ def Cambio_Musica():
 def read_write_txt():
     with open(r"STAR LIGHT RUNNER/high_scores.txt", "r") as high_scores:
         lista = high_scores.readlines()
-        score_update(pantallas.score, pantallas.nombre_jugador, 1, lista)
+    Nueva_Lista = scores_quicksort(pantallas.score, pantallas.nombre_jugador, lista)
 
     with open(r"STAR LIGHT RUNNER/high_scores.txt", "w") as high_scores:
-        high_scores.writelines(lista)
+        high_scores.writelines(Nueva_Lista)
 
 def new_highscore():
     with open(r"STAR LIGHT RUNNER/high_scores.txt", "r") as high_scores:
@@ -352,8 +386,7 @@ class pantallas():
                     elif button == button_5:
                         CLICK_SOUND.play()
                         CLICK_SOUND.set_volume(0.2)
-                        self.pantalla = "Pantalla_3"
-                    
+                        self.pantalla = "Pantalla_3"          
 
         self.click = False
         # Fondo
@@ -416,6 +449,7 @@ class pantallas():
         
         with open(r"STAR LIGHT RUNNER/high_scores.txt", "r") as high_scores:
             lista = high_scores.readlines()
+            #Lista_Final = scores_quicksort(pantallas.score, pantallas.nombre_jugador, lista)
             draw_text(ventana, "1         {}   {}".format(lista[0].rstrip(), lista[1].rstrip()), 60, 300, 150)
             draw_text(ventana, "2         {}   {}".format(lista[2].rstrip(), lista[3].rstrip()), 60, 300, 200)
             draw_text(ventana, "3         {}   {}".format(lista[4].rstrip(), lista[5].rstrip()), 60, 300, 250)
@@ -451,7 +485,7 @@ class pantallas():
         colisiones()
         all_sprites.draw(ventana)
         Enemigos.draw(ventana)
-    
+
     def Pantalla_2(self):
         for event in pygame.event.get():
                 # Cerrar ventana
@@ -476,7 +510,7 @@ class pantallas():
         colisiones()
         all_sprites.draw(ventana)
         Enemigos.draw(ventana)
-    
+
     def Pantalla_3(self):
         for event in pygame.event.get():
                 # Cerrar ventana
@@ -506,16 +540,21 @@ class pantallas():
         all_sprites.draw(ventana)
         Enemigos.draw(ventana)
 
+
 # función para elección de pantallas
 pantallas = pantallas()
+
 
 jugador = jugador()
 all_sprites = pygame.sprite.Group(jugador)
 
+
 Enemigos = pygame.sprite.Group()
+
 
 MENU_MUSIC.play(-1)
 MENU_MUSIC.set_volume(0.2)
+
 
 while pantallas.running:
     pantallas.cambio_pantalla()
