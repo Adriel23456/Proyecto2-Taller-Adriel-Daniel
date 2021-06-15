@@ -74,7 +74,7 @@ def update_background():
     ventana.blit(background,(0,y_relativa - background.get_rect().width))
     if (y_relativa < H):
         ventana.blit(background,(0,y_relativa))
-    pantallas.y = pantallas.y + 20
+    pantallas.y = pantallas.y + 14
 
 def pantalla_de_juego():
     # Fondo
@@ -104,9 +104,9 @@ def colisiones():
     colision = pygame.sprite.spritecollide(jugador, Enemigos, True)
     if colision:
         HIT_SOUND.play()
-        HIT_SOUND.set_volume(0.2)
+        HIT_SOUND.set_volume(0.1)
         jugador.vida -= 1
-        #puntuacion -= 1
+        #pantallas.score -= 1
 
 #Aqui se define la aplicacion de quicksort
 def quicksort(lista):
@@ -162,12 +162,65 @@ def scores_quicksort(Points, player_name, lista):
         Lista_Final = lista
     return Lista_Final
 
-def Cambio_Musica():
-    if pantallas.pantalla == "Pantalla_de_inicio":
-        PLAYING_GAMEPLAY_MUSIC.stop()
-        MENU_MUSIC.stop()
-        PLAYING_GAMEPLAY_MUSIC.play(-1)
-        PLAYING_GAMEPLAY_MUSIC.set_volume(0.2)
+def Cambio_Musica_Menu():
+    PLAYING_GAMEPLAY_MUSIC.stop()
+    PLAYING_GAMEPLAY_MUSIC2.stop()
+    PLAYING_GAMEPLAY_MUSIC3.stop()
+    MENU_MUSIC.stop()
+    CREDITS_MUSIC.stop()
+    SCORES_MUSIC.stop()
+    MENU_MUSIC.play(-1)
+    MENU_MUSIC.set_volume(0.2)
+
+def Cambio_Musica_Level1():
+    PLAYING_GAMEPLAY_MUSIC.stop()
+    PLAYING_GAMEPLAY_MUSIC2.stop()
+    PLAYING_GAMEPLAY_MUSIC3.stop()
+    MENU_MUSIC.stop()
+    CREDITS_MUSIC.stop()
+    SCORES_MUSIC.stop()
+    PLAYING_GAMEPLAY_MUSIC.play(-1)
+    PLAYING_GAMEPLAY_MUSIC.set_volume(0.09)
+
+def Cambio_Musica_Level2():
+    PLAYING_GAMEPLAY_MUSIC.stop()
+    PLAYING_GAMEPLAY_MUSIC2.stop()
+    PLAYING_GAMEPLAY_MUSIC3.stop()
+    MENU_MUSIC.stop()
+    CREDITS_MUSIC.stop()
+    SCORES_MUSIC.stop()
+    PLAYING_GAMEPLAY_MUSIC2.play(-1)
+    PLAYING_GAMEPLAY_MUSIC2.set_volume(0.09)
+
+def Cambio_Musica_Level3():
+    PLAYING_GAMEPLAY_MUSIC.stop()
+    PLAYING_GAMEPLAY_MUSIC2.stop()
+    PLAYING_GAMEPLAY_MUSIC3.stop()
+    MENU_MUSIC.stop()
+    CREDITS_MUSIC.stop()
+    SCORES_MUSIC.stop()
+    PLAYING_GAMEPLAY_MUSIC3.play(-1)
+    PLAYING_GAMEPLAY_MUSIC3.set_volume(0.09)
+
+def Cambio_Musica_Creditos():
+    PLAYING_GAMEPLAY_MUSIC.stop()
+    PLAYING_GAMEPLAY_MUSIC2.stop()
+    PLAYING_GAMEPLAY_MUSIC3.stop()
+    MENU_MUSIC.stop()
+    CREDITS_MUSIC.stop()
+    SCORES_MUSIC.stop()
+    CREDITS_MUSIC.play(-1)
+    CREDITS_MUSIC.set_volume(0.09)
+
+def Cambio_Musica_Scores():
+    PLAYING_GAMEPLAY_MUSIC.stop()
+    PLAYING_GAMEPLAY_MUSIC2.stop()
+    PLAYING_GAMEPLAY_MUSIC3.stop()
+    MENU_MUSIC.stop()
+    CREDITS_MUSIC.stop()
+    SCORES_MUSIC.stop()
+    SCORES_MUSIC.play(-1)
+    SCORES_MUSIC.set_volume(0.07)
 
 def read_write_txt():
     with open(r"STAR LIGHT RUNNER/high_scores.txt", "r") as high_scores:
@@ -230,10 +283,13 @@ class jugador(pygame.sprite.Sprite):
         # Verificación de la vida del jugador
         if self.vida <= 0:
             EXPLOSION1_SOUND.play()
+            EXPLOSION1_SOUND.set_volume(0.1)
             if new_highscore():
+                Cambio_Musica_Scores()
                 pantallas.pantalla = "high_scores"
                 pantallas.new_highscore = True
             else:
+                Cambio_Musica_Menu()
                 pantallas.pantalla = "Pantalla_de_inicio"
             read_write_txt()
             pantallas.nueva_pantalla = True
@@ -263,18 +319,22 @@ class enemigos(pygame.sprite.Sprite):
         # Limites de movimiento en la ventana
         if self.rect.x <= 0:
             EXPLOSION2_SOUND.play()
+            EXPLOSION2_SOUND.set_volume(0.09)
             self.velocidad_x = random.randrange(1,4)
             self.velocidad_y = random.randrange(-4,4)
         elif self.rect.x >= 510:
             EXPLOSION2_SOUND.play()
+            EXPLOSION2_SOUND.set_volume(0.09)
             self.velocidad_x = random.randrange(-4,-1)
             self.velocidad_y = random.randrange(-4,4)
         if self.rect.y <= 0:
             EXPLOSION2_SOUND.play()
+            EXPLOSION2_SOUND.set_volume(0.09)
             self.velocidad_x = random.randrange(-4,4)
             self.velocidad_y = random.randrange(1,4)
         elif self.rect.y >= 710:
             EXPLOSION2_SOUND.play()
+            EXPLOSION2_SOUND.set_volume(0.09)
             self.velocidad_x = random.randrange(-4,4)
             self.velocidad_y = random.randrange(-4,-1)
 
@@ -371,23 +431,28 @@ class pantallas():
                 if self.click:
                     if button == button_1:
                         CLICK_SOUND.play()
-                        CLICK_SOUND.set_volume(0.2)
+                        CLICK_SOUND.set_volume(0.1)
+                        Cambio_Musica_Level1()
                         self.pantalla = "Pantalla_1"
                     elif button == button_2:
                         CLICK_SOUND.play()
-                        CLICK_SOUND.set_volume(0.2)
+                        CLICK_SOUND.set_volume(0.1)
+                        Cambio_Musica_Creditos()
                         self.pantalla = "about"
                     elif button == button_3:
                         CLICK_SOUND.play()
-                        CLICK_SOUND.set_volume(0.2)
+                        CLICK_SOUND.set_volume(0.1)
+                        Cambio_Musica_Scores()
                         self.pantalla = "high_scores"
                     elif button == button_4:
                         CLICK_SOUND.play()
-                        CLICK_SOUND.set_volume(0.2)
+                        CLICK_SOUND.set_volume(0.1)
+                        Cambio_Musica_Level2()
                         self.pantalla = "Pantalla_2"
                     elif button == button_5:
                         CLICK_SOUND.play()
-                        CLICK_SOUND.set_volume(0.2)
+                        CLICK_SOUND.set_volume(0.1)
+                        Cambio_Musica_Level3()
                         self.pantalla = "Pantalla_3"          
 
         self.click = False
@@ -420,6 +485,7 @@ class pantallas():
             elif event.type == pygame.KEYDOWN:
                 # Regreso al menú principal
                 if event.key == pygame.K_ESCAPE:
+                    Cambio_Musica_Menu()
                     self.pantalla = "Pantalla_de_inicio"
         ventana.blit(background, (0, 0))
         draw_text(ventana, "ABOUT", 60, 300, 50)
@@ -444,11 +510,11 @@ class pantallas():
             elif event.type == pygame.KEYDOWN:
                 # Regreso al menú principal
                 if event.key == pygame.K_ESCAPE:
+                    Cambio_Musica_Menu()
                     self.pantalla = "Pantalla_de_inicio"
                     self.new_highscore = False
         ventana.blit(background, (0, 0))
         draw_text(ventana, "High   Scores", 60, 300, 50)
-        
         with open(r"STAR LIGHT RUNNER/high_scores.txt", "r") as high_scores:
             lista = high_scores.readlines()
             #Lista_Final = scores_quicksort(pantallas.score, pantallas.nombre_jugador, lista)
@@ -471,11 +537,13 @@ class pantallas():
                 elif event.type == pygame.KEYDOWN:
                     # Regreso al menú principal
                     if event.key == pygame.K_ESCAPE:
+                        Cambio_Musica_Menu()
                         Enemigos.empty()
                         self.pantalla = "Pantalla_de_inicio"
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
         if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
+            Cambio_Musica_Level2()
             pantallas.pantalla = "Pantalla_2"
             pantallas.nueva_pantalla = True
             jugador.rect.center = (300, 700)
@@ -496,11 +564,13 @@ class pantallas():
                 elif event.type == pygame.KEYDOWN:
                     # Regreso al menú principal
                     if event.key == pygame.K_ESCAPE:
+                        Cambio_Musica_Menu()
                         Enemigos.empty()
                         self.pantalla = "Pantalla_de_inicio"
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
         if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
+            Cambio_Musica_Level3()
             pantallas.pantalla = "Pantalla_3"
             pantallas.nueva_pantalla = True
             jugador.rect.center = (300, 700)
@@ -521,15 +591,18 @@ class pantallas():
                 elif event.type == pygame.KEYDOWN:
                     # Regreso al menú principal
                     if event.key == pygame.K_ESCAPE:
+                        Cambio_Musica_Menu()
                         Enemigos.empty()
                         self.pantalla = "Pantalla_de_inicio"
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
         if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
             if new_highscore():
+                Cambio_Musica_Scores()
                 pantallas.pantalla = "high_scores"
                 pantallas.new_highscore = True
             else:
+                Cambio_Musica_Menu()
                 pantallas.pantalla = "Pantalla_de_inicio"
             pantallas.nueva_pantalla = True
             jugador.rect.center = (300, 700)
