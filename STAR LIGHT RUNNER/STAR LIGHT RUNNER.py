@@ -106,7 +106,7 @@ def colisiones():
         HIT_SOUND.play()
         HIT_SOUND.set_volume(0.1)
         jugador.vida -= 1
-        #pantallas.score -= 1
+        pantallas.score -= 1
 
 #Aqui se define la aplicacion de quicksort
 def quicksort(lista):
@@ -543,6 +543,8 @@ class pantallas():
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
         if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
+            if jugador.vida == 3:
+                self.score += 10
             Cambio_Musica_Level2()
             pantallas.pantalla = "Pantalla_2"
             pantallas.nueva_pantalla = True
@@ -570,6 +572,8 @@ class pantallas():
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
         if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
+            if jugador.vida == 3:
+                self.score += 10
             Cambio_Musica_Level3()
             pantallas.pantalla = "Pantalla_3"
             pantallas.nueva_pantalla = True
@@ -597,6 +601,8 @@ class pantallas():
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
         if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
+            if jugador.vida == 3:
+                self.score += 10
             if new_highscore():
                 Cambio_Musica_Scores()
                 pantallas.pantalla = "high_scores"
