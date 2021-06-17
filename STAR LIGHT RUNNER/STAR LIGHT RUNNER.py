@@ -13,6 +13,7 @@ carpeta_personajes = os.path.join(carpeta_assets, "Personajes")
 carpeta_sonidos = os.path.join(carpeta_assets, "Sonidos")
 carpeta_font = os.path.join(carpeta_assets, "Font")
 
+#Iniciar Pygame
 pygame.init()
 pygame.mixer.init()
 clock = pygame.time.Clock()
