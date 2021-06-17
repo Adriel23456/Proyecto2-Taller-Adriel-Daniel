@@ -395,7 +395,7 @@ class pantallas():
             if self.nueva_pantalla:
                 self.tiempo_inicial = pygame.time.get_ticks()
                 self.nueva_pantalla = False
-                for x in range(2):
+                for x in range(4):
                     meteoritos = enemigos()
                     Enemigos.add(meteoritos)
             self.Pantalla_1()
@@ -403,7 +403,7 @@ class pantallas():
             if self.nueva_pantalla:
                 self.tiempo_inicial = pygame.time.get_ticks()
                 self.nueva_pantalla = False
-                for x in range(2):
+                for x in range(6):
                     meteoritos = enemigos()
                     Enemigos.add(meteoritos)
             self.Pantalla_2()
@@ -411,7 +411,7 @@ class pantallas():
             if self.nueva_pantalla:
                 self.tiempo_inicial = pygame.time.get_ticks()
                 self.nueva_pantalla = False
-                for x in range(2):
+                for x in range(8):
                     meteoritos = enemigos()
                     Enemigos.add(meteoritos)
             self.Pantalla_3()
@@ -576,7 +576,7 @@ class pantallas():
                         self.pantalla = "Pantalla_de_inicio"
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
-        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 10:
+        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
             if jugador.vida == 3:
                 self.score_level1 = self.score + 10
             else:
@@ -610,7 +610,7 @@ class pantallas():
                         self.pantalla = "Pantalla_de_inicio"
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
-        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 10:
+        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
             if jugador.vida == 3:
                 self.score_level2 = self.score + 10
             else:
