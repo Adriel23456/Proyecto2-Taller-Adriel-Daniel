@@ -249,15 +249,15 @@ def Cambio_Musica_Scores():
     SCORES_MUSIC.set_volume(0.07)
 
 def read_write_txt():
-    with open(r"STAR LIGHT RUNNER/high_scores.txt", "r") as high_scores:
+    with open("high_scores.txt", "r") as high_scores:
         lista = high_scores.readlines()
     Nueva_Lista = scores_quicksort(pantallas.score, pantallas.nombre_jugador, lista)
 
-    with open(r"STAR LIGHT RUNNER/high_scores.txt", "w") as high_scores:
+    with open("high_scores.txt", "w") as high_scores:
         high_scores.writelines(Nueva_Lista)
 
 def new_highscore():
-    with open(r"STAR LIGHT RUNNER/high_scores.txt", "r") as high_scores:
+    with open("high_scores.txt", "r") as high_scores:
         lista = high_scores.readlines()
 
         if pantallas.score > int(lista[1]):
@@ -552,7 +552,7 @@ class pantallas():
                     self.new_highscore = False
         ventana.blit(background, (0, 0))
         draw_text(ventana, "High   Scores", 60, 300, 50)
-        with open(r"STAR LIGHT RUNNER/high_scores.txt", "r") as high_scores:
+        with open("high_scores.txt", "r") as high_scores:
             lista = high_scores.readlines()
             #Lista_Final = scores_quicksort(pantallas.score, pantallas.nombre_jugador, lista)
             draw_text(ventana, "1         {}   {}".format(lista[0].rstrip(), lista[1].rstrip()), 60, 300, 150)
