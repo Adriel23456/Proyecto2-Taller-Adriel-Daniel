@@ -6,6 +6,6 @@ git commit -m "Texto que identifica la parte del codigo que se quiere guardar en
 git log --oneline (Para ver los diferentes commit enviados)
 git remote add origin https://github.com/Adriel23456/Proyecto2-Taller-Adriel-Daniel.git
 git pull --rebase
-git pull 
+git branch ?
 git branch -M main
 git push -u origin main

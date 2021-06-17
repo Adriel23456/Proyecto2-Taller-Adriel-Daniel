@@ -3,6 +3,7 @@ import pygame_textinput
 import random
 import os
 
+
 #Rutas para los archivos
 carpeta_juego = os.path.dirname(__file__)
 carpeta_assets = os.path.join(carpeta_juego, "Assets")
@@ -50,6 +51,7 @@ button_img6 = pygame.transform.scale(button_img6, (108, 69))
 button_img7 = pygame.image.load(os.path.join(carpeta_botones, 'Boton7.png'))
 button_img7 = pygame.transform.scale(button_img7, (108, 69))
 
+
 # Definir sonidos
 PLAYING_GAMEPLAY_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Pantalla-de-Juego.mp3'))
 PLAYING_GAMEPLAY_MUSIC2 = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Pantalla-de-Juego2.mp3'))
@@ -93,11 +95,35 @@ def pantalla_de_juego():
     draw_text(ventana, str(tiempo), 30, 90, 55)
     # Puntaje
     if pantallas.pantalla == "Pantalla_1":
-        pantallas.score = tiempo
+        if jugador.vida != 3:
+            if jugador.vida == 2:
+                pantallas.score = tiempo - 1
+            elif jugador.vida == 1:
+                pantallas.score = tiempo - 2
+            else:
+                pass
+        else:
+            pantallas.score = tiempo
     elif pantallas.pantalla == "Pantalla_2":
-        pantallas.score = tiempo*3
+        if jugador.vida != 3:
+            if jugador.vida == 2:
+                pantallas.score = tiempo*3 - 1  +  pantallas.score_level1
+            elif jugador.vida == 1:
+                pantallas.score = tiempo*3 - 2  +  pantallas.score_level1
+            else:
+                pass
+        else:
+            pantallas.score = tiempo*3  +  pantallas.score_level1
     elif pantallas.pantalla == "Pantalla_3":
-        pantallas.score = tiempo*5
+        if jugador.vida != 3:
+            if jugador.vida == 2:
+                pantallas.score = tiempo*5 - 1  +  pantallas.score_level1  +  pantallas.score_level2
+            elif jugador.vida == 1:
+                pantallas.score = tiempo*5 - 2  +  pantallas.score_level1  +  pantallas.score_level2
+            else:
+                pass
+        else:
+            pantallas.score = tiempo*5  +  pantallas.score_level1  +  pantallas.score_level2
     draw_text(ventana, str(pantallas.score), 50, 300, 30)
 
 def colisiones():
@@ -293,6 +319,8 @@ class jugador(pygame.sprite.Sprite):
                 pantallas.pantalla = "Pantalla_de_inicio"
             read_write_txt()
             pantallas.nueva_pantalla = True
+            pantallas.score_level1 = 0
+            pantallas.score_level2 = 0
             self.rect.center = (300, 700)
             self.vida = 3
             Enemigos.empty()
@@ -357,6 +385,10 @@ class pantallas():
         self.new_highscore = False
         # Variable para el movimiento del fondo
         self.y = 0
+        #Variables para el sistema de puntuacion
+        self.score_level1 = 0
+        self.score_level2 = 0
+        self.score_level3 = 0
 
     def cambio_pantalla(self):
         if self.pantalla == "Pantalla_de_inicio":
@@ -511,6 +543,7 @@ class pantallas():
                 # Regreso al menú principal
                 if event.key == pygame.K_ESCAPE:
                     Cambio_Musica_Menu()
+                    self.score_level3 = 0
                     self.pantalla = "Pantalla_de_inicio"
                     self.new_highscore = False
         ventana.blit(background, (0, 0))
@@ -538,13 +571,18 @@ class pantallas():
                     # Regreso al menú principal
                     if event.key == pygame.K_ESCAPE:
                         Cambio_Musica_Menu()
+                        self.score_level1 = 0
+                        self.score_level2 = 0
+                        self.score_level3 = 0
                         Enemigos.empty()
                         self.pantalla = "Pantalla_de_inicio"
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
-        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 10:
+        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
             if jugador.vida == 3:
-                self.score += 10
+                self.score_level1 = self.score + 10
+            else:
+                self.score_level1 = self.score
             Cambio_Musica_Level2()
             pantallas.pantalla = "Pantalla_2"
             pantallas.nueva_pantalla = True
@@ -567,13 +605,18 @@ class pantallas():
                     # Regreso al menú principal
                     if event.key == pygame.K_ESCAPE:
                         Cambio_Musica_Menu()
+                        self.score_level1 = 0
+                        self.score_level2 = 0
+                        self.score_level3 = 0
                         Enemigos.empty()
                         self.pantalla = "Pantalla_de_inicio"
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
         if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
             if jugador.vida == 3:
-                self.score += 10
+                self.score_level2 = self.score + 10
+            else:
+                self.score_level2 = self.score
             Cambio_Musica_Level3()
             pantallas.pantalla = "Pantalla_3"
             pantallas.nueva_pantalla = True
@@ -596,14 +639,20 @@ class pantallas():
                     # Regreso al menú principal
                     if event.key == pygame.K_ESCAPE:
                         Cambio_Musica_Menu()
+                        self.score_level1 = 0
+                        self.score_level2 = 0
+                        self.score_level3 = 0
                         Enemigos.empty()
                         self.pantalla = "Pantalla_de_inicio"
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
         if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
             if jugador.vida == 3:
-                self.score += 10
+                self.score_level3 = self.score + 10
+            else:
+                self.score_level3 = self.score
             if new_highscore():
+                self.score = self.score_level3
                 read_write_txt()
                 Cambio_Musica_Scores()
                 pantallas.pantalla = "high_scores"
@@ -622,21 +671,16 @@ class pantallas():
         all_sprites.draw(ventana)
         Enemigos.draw(ventana)
 
-
 # función para elección de pantallas
 pantallas = pantallas()
-
 
 jugador = jugador()
 all_sprites = pygame.sprite.Group(jugador)
 
-
 Enemigos = pygame.sprite.Group()
-
 
 MENU_MUSIC.play(-1)
 MENU_MUSIC.set_volume(0.2)
-
 
 while pantallas.running:
     pantallas.cambio_pantalla()
