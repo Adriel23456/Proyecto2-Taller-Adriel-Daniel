@@ -270,6 +270,10 @@ def new_highscore():
             return True
         elif pantallas.score > int(lista[9]):
             return True
+        elif pantallas.score > int(lista[11]):
+            return True
+        elif pantallas.score > int(lista[13]):
+            return True
         else:
             return False
 
