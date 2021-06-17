@@ -3,17 +3,6 @@ import pygame_textinput
 import random
 import os
 
-pygame.init()
-pygame.mixer.init()
-clock = pygame.time.Clock()
-
-
-# Configuración de la ventana
-W, H = 600, 800
-ventana = pygame.display.set_mode((W, H))
-pygame.display.set_caption("STAR LIGHT RUNNER")
-
-
 #Rutas para los archivos
 carpeta_juego = os.path.dirname(__file__)
 carpeta_assets = os.path.join(carpeta_juego, "Assets")
@@ -24,9 +13,20 @@ carpeta_personajes = os.path.join(carpeta_assets, "Personajes")
 carpeta_sonidos = os.path.join(carpeta_assets, "Sonidos")
 carpeta_font = os.path.join(carpeta_assets, "Font")
 
+pygame.init()
+pygame.mixer.init()
+clock = pygame.time.Clock()
+
+# Configuración de la ventana
+W, H = 600, 800
+ventana = pygame.display.set_mode((W, H))
+pygame.display.set_caption("STAR LIGHT RUNNER")
+icono = pygame.image.load(os.path.join(carpeta_personajes,'Jugador.png'))
+pygame.display.set_icon(icono)
 
 # Definir imágenes
 background = pygame.image.load(os.path.join(carpeta_fondos, 'Background.png'))
+menu = pygame.image.load(os.path.join(carpeta_fondos, 'MENU.png'))
 
 button_img1 = pygame.image.load(os.path.join(carpeta_botones, 'Boton1.png'))
 button_img1 = pygame.transform.scale(button_img1, (600, 113))
@@ -48,7 +48,6 @@ button_img6 = pygame.transform.scale(button_img6, (108, 69))
 
 button_img7 = pygame.image.load(os.path.join(carpeta_botones, 'Boton7.png'))
 button_img7 = pygame.transform.scale(button_img7, (108, 69))
-
 
 # Definir sonidos
 PLAYING_GAMEPLAY_MUSIC = pygame.mixer.Sound(os.path.join(carpeta_musica, 'Pantalla-de-Juego.mp3'))
@@ -93,35 +92,11 @@ def pantalla_de_juego():
     draw_text(ventana, str(tiempo), 30, 90, 55)
     # Puntaje
     if pantallas.pantalla == "Pantalla_1":
-        if jugador.vida != 3:
-            if jugador.vida == 2:
-                pantallas.score = tiempo - 1
-            elif jugador.vida == 1:
-                pantallas.score = tiempo - 2
-            else:
-                pass
-        else:
-            pantallas.score = tiempo
+        pantallas.score = tiempo
     elif pantallas.pantalla == "Pantalla_2":
-        if jugador.vida != 3:
-            if jugador.vida == 2:
-                pantallas.score = tiempo*3 - 1  +  pantallas.score_level1
-            elif jugador.vida == 1:
-                pantallas.score = tiempo*3 - 2  +  pantallas.score_level1
-            else:
-                pass
-        else:
-            pantallas.score = tiempo*3  +  pantallas.score_level1
+        pantallas.score = tiempo*3
     elif pantallas.pantalla == "Pantalla_3":
-        if jugador.vida != 3:
-            if jugador.vida == 2:
-                pantallas.score = tiempo*5 - 1  +  pantallas.score_level1  +  pantallas.score_level2
-            elif jugador.vida == 1:
-                pantallas.score = tiempo*5 - 2  +  pantallas.score_level1  +  pantallas.score_level2
-            else:
-                pass
-        else:
-            pantallas.score = tiempo*5  +  pantallas.score_level1  +  pantallas.score_level2
+        pantallas.score = tiempo*5
     draw_text(ventana, str(pantallas.score), 50, 300, 30)
 
 def colisiones():
@@ -317,8 +292,6 @@ class jugador(pygame.sprite.Sprite):
                 pantallas.pantalla = "Pantalla_de_inicio"
             read_write_txt()
             pantallas.nueva_pantalla = True
-            pantallas.score_level1 = 0
-            pantallas.score_level2 = 0
             self.rect.center = (300, 700)
             self.vida = 3
             Enemigos.empty()
@@ -383,10 +356,6 @@ class pantallas():
         self.new_highscore = False
         # Variable para el movimiento del fondo
         self.y = 0
-        #Variables para el sistema de puntuacion
-        self.score_level1 = 0
-        self.score_level2 = 0
-        self.score_level3 = 0
 
     def cambio_pantalla(self):
         if self.pantalla == "Pantalla_de_inicio":
@@ -395,7 +364,7 @@ class pantallas():
             if self.nueva_pantalla:
                 self.tiempo_inicial = pygame.time.get_ticks()
                 self.nueva_pantalla = False
-                for x in range(2):
+                for x in range(4):
                     meteoritos = enemigos()
                     Enemigos.add(meteoritos)
             self.Pantalla_1()
@@ -403,7 +372,7 @@ class pantallas():
             if self.nueva_pantalla:
                 self.tiempo_inicial = pygame.time.get_ticks()
                 self.nueva_pantalla = False
-                for x in range(2):
+                for x in range(6):
                     meteoritos = enemigos()
                     Enemigos.add(meteoritos)
             self.Pantalla_2()
@@ -411,7 +380,7 @@ class pantallas():
             if self.nueva_pantalla:
                 self.tiempo_inicial = pygame.time.get_ticks()
                 self.nueva_pantalla = False
-                for x in range(2):
+                for x in range(8):
                     meteoritos = enemigos()
                     Enemigos.add(meteoritos)
             self.Pantalla_3()
@@ -487,7 +456,7 @@ class pantallas():
 
         self.click = False
         # Fondo
-        ventana.blit(background, (0, 0))
+        ventana.blit(menu, (0, 0))
         # Botones
         ventana.blit(button_, (10, 720))
         ventana.blit(button1, (80, 500))
@@ -541,7 +510,6 @@ class pantallas():
                 # Regreso al menú principal
                 if event.key == pygame.K_ESCAPE:
                     Cambio_Musica_Menu()
-                    self.score_level3 = 0
                     self.pantalla = "Pantalla_de_inicio"
                     self.new_highscore = False
         ventana.blit(background, (0, 0))
@@ -569,18 +537,13 @@ class pantallas():
                     # Regreso al menú principal
                     if event.key == pygame.K_ESCAPE:
                         Cambio_Musica_Menu()
-                        self.score_level1 = 0
-                        self.score_level2 = 0
-                        self.score_level3 = 0
                         Enemigos.empty()
                         self.pantalla = "Pantalla_de_inicio"
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
         if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 10:
             if jugador.vida == 3:
-                self.score_level1 = self.score + 10
-            else:
-                self.score_level1 = self.score
+                self.score += 10
             Cambio_Musica_Level2()
             pantallas.pantalla = "Pantalla_2"
             pantallas.nueva_pantalla = True
@@ -603,18 +566,13 @@ class pantallas():
                     # Regreso al menú principal
                     if event.key == pygame.K_ESCAPE:
                         Cambio_Musica_Menu()
-                        self.score_level1 = 0
-                        self.score_level2 = 0
-                        self.score_level3 = 0
                         Enemigos.empty()
                         self.pantalla = "Pantalla_de_inicio"
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
-        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 10:
+        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
             if jugador.vida == 3:
-                self.score_level2 = self.score + 10
-            else:
-                self.score_level2 = self.score
+                self.score += 10
             Cambio_Musica_Level3()
             pantallas.pantalla = "Pantalla_3"
             pantallas.nueva_pantalla = True
@@ -637,21 +595,16 @@ class pantallas():
                     # Regreso al menú principal
                     if event.key == pygame.K_ESCAPE:
                         Cambio_Musica_Menu()
-                        self.score_level1 = 0
-                        self.score_level2 = 0
-                        self.score_level3 = 0
                         Enemigos.empty()
                         self.pantalla = "Pantalla_de_inicio"
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
-        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 10:
+        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
             if jugador.vida == 3:
-                self.score_level3 = self.score + 10
-            else:
-                self.score_level3 = self.score
+                self.score += 10
             if new_highscore():
+                read_write_txt()
                 Cambio_Musica_Scores()
-                self.score = self.score_level3
                 pantallas.pantalla = "high_scores"
                 pantallas.new_highscore = True
             else:
