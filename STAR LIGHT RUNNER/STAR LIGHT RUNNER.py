@@ -3,16 +3,6 @@ import pygame_textinput
 import random
 import os
 
-pygame.init()
-pygame.mixer.init()
-clock = pygame.time.Clock()
-
-
-# Configuración de la ventana
-W, H = 600, 800
-ventana = pygame.display.set_mode((W, H))
-pygame.display.set_caption("STAR LIGHT RUNNER")
-
 
 #Rutas para los archivos
 carpeta_juego = os.path.dirname(__file__)
@@ -24,9 +14,21 @@ carpeta_personajes = os.path.join(carpeta_assets, "Personajes")
 carpeta_sonidos = os.path.join(carpeta_assets, "Sonidos")
 carpeta_font = os.path.join(carpeta_assets, "Font")
 
+#Iniciar Pygame
+pygame.init()
+pygame.mixer.init()
+clock = pygame.time.Clock()
+
+# Configuración de la ventana
+W, H = 600, 800
+ventana = pygame.display.set_mode((W, H))
+pygame.display.set_caption("STAR LIGHT RUNNER")
+icono = pygame.image.load(os.path.join(carpeta_personajes,'Jugador.png'))
+pygame.display.set_icon(icono)
 
 # Definir imágenes
 background = pygame.image.load(os.path.join(carpeta_fondos, 'Background.png'))
+menu = pygame.image.load(os.path.join(carpeta_fondos, 'MENU.png'))
 
 button_img1 = pygame.image.load(os.path.join(carpeta_botones, 'Boton1.png'))
 button_img1 = pygame.transform.scale(button_img1, (600, 113))
@@ -487,7 +489,7 @@ class pantallas():
 
         self.click = False
         # Fondo
-        ventana.blit(background, (0, 0))
+        ventana.blit(menu, (0, 0))
         # Botones
         ventana.blit(button_, (10, 720))
         ventana.blit(button1, (80, 500))
@@ -644,14 +646,15 @@ class pantallas():
                         self.pantalla = "Pantalla_de_inicio"
                         jugador.vida = 3
                         pantallas.nueva_pantalla = True
-        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 10:
+        if (pygame.time.get_ticks()-pantallas.tiempo_inicial)//1000 == 60:
             if jugador.vida == 3:
                 self.score_level3 = self.score + 10
             else:
                 self.score_level3 = self.score
             if new_highscore():
-                Cambio_Musica_Scores()
                 self.score = self.score_level3
+                read_write_txt()
+                Cambio_Musica_Scores()
                 pantallas.pantalla = "high_scores"
                 pantallas.new_highscore = True
             else:
@@ -668,21 +671,16 @@ class pantallas():
         all_sprites.draw(ventana)
         Enemigos.draw(ventana)
 
-
 # función para elección de pantallas
 pantallas = pantallas()
-
 
 jugador = jugador()
 all_sprites = pygame.sprite.Group(jugador)
 
-
 Enemigos = pygame.sprite.Group()
-
 
 MENU_MUSIC.play(-1)
 MENU_MUSIC.set_volume(0.2)
-
 
 while pantallas.running:
     pantallas.cambio_pantalla()
